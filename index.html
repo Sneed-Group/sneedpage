@@ -45,11 +45,7 @@
     }
 
     function generateHTMLFromPrompt(prompt) {
-        const url = `https://olproxy.nodemixaholic.com`; // Replace with your proxy server URL and port
-
-      const body = new URLSearchParams();
-      body.append('model', 'starcoder2:7b');
-      
+      const url = `http://localhost:11434`; // localhost ollama
       const answerCount = 0; // Assuming you want this to start at 0
 
       if (answerCount < 1) {
@@ -69,12 +65,10 @@ Do NOT use external libraries.
 Fix any bugs as well.`;
       }
 
-      body.append('prompt', prompt);
-
-      //const body = JSON.stringify({
-        //model: "starcoder2:7b",
-        //prompt: prompt // User's prompt from the text area
-      //});
+      const body = JSON.stringify({
+        model: "starcoder2:7b",
+        prompt: prompt // User's prompt from the text area
+      });
 
       return fetch(url, {
         method: "POST",

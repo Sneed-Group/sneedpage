@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SneedPage</title>
+</head>
+<body>
+  <textarea id="prompt" rows="10" cols="50"></textarea>
+  <button onclick="generateWebsite()">Prompt</button>
+  <div id="preview" width="100%" height="32%"></div>
+  <button onclick="saveHTML()">Save HTML</button>
+
+  <script>
+    let currentHTML;
+    function generateWebsite() {
+      const prompt = document.getElementById("prompt").value;
+      // Replace with your Ollama API call and processing logic
+      const generatedHTML = generateHTMLFromPrompt(prompt);
+
+      // Load the generated HTML into the iframe
+      const iframe = document.getElementById("preview");
+      iframe.contentDocument.open();
+      iframe.contentDocument.write(generatedHTML);
+      iframe.contentDocument.close();
+    }
+
+    function saveHTML() {
+      const generatedHTML = currentHTML;
+      const blob = new Blob([generatedHTML], { type: "text/html" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "generated_website.html";
+      a.click();
+    }
+
+    // Replace this with your Ollama API integration and HTML generation logic
+    let answerCount = 0
+    let body;
+    function generateHTMLFromPrompt(prompt) {
+      const url = "https://ollama-api.nodemixaholic.com/api/generate";
+      if (answercount < 1) {
+        prompt += `
+Create this in HTML, CSS, and Javascript as a single-page application with dynamically loading content.
+Do NOT use external libraries.`
+    } else {
+      prompt += `
+
+See that? Yeah do that to the following website code:
+
+${currentHTML}
+
+Be sure to use HTML, CSS, and Javascript and make it a single-page application with dynamically loading content.
+Do NOT use external libraries.
+Fix any bugs as well.`
+    }
+
+    body = JSON.stringify({
+      model: "starcoder2:7b",
+      prompt: prompt // User's prompt from the text area
+    });
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: body
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Display the generated website code in a designated area (e.g., pre tag)
+      currentHTML = data.response;
+      document.getElementById("preview").innerHTML = currentHTML;
+      answerCount++
+      return data.response;
+    })
+    .catch(error => {
+      console.error(error);
+      // Handle API errors and display an error message to the user
+    });
+    }
+  </script>
+</body>
+</html>

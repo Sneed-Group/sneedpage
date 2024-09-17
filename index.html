@@ -45,7 +45,11 @@
     }
 
     function generateHTMLFromPrompt(prompt) {
-      const url = `https://cloud.sparksammy.com/yaps.php?targetUrl=https://ollama-api.nodemixaholic.com/api/generate`; // https://ollama-api.nodemixaholic.com/api/generate
+        const url = `https://olproxy.nodemixaholic.com`; // Replace with your proxy server URL and port
+
+      const body = new URLSearchParams();
+      body.append('model', 'starcoder2:7b');
+      
       const answerCount = 0; // Assuming you want this to start at 0
 
       if (answerCount < 1) {
@@ -65,10 +69,12 @@ Do NOT use external libraries.
 Fix any bugs as well.`;
       }
 
-      const body = JSON.stringify({
-        model: "starcoder2:7b",
-        prompt: prompt // User's prompt from the text area
-      });
+      body.append('prompt', prompt);
+
+      //const body = JSON.stringify({
+        //model: "starcoder2:7b",
+        //prompt: prompt // User's prompt from the text area
+      //});
 
       return fetch(url, {
         method: "POST",
